@@ -1,36 +1,53 @@
-module.exports = function(grunt){
+module.exports = function (grunt) {
     'use strict';
 
     grunt.initConfig({
-        autoprefixer:{
-            dist:{
-                files:{
+        autoprefixer: {
+            dist: {
+                files: {
                     'deploy/css/main.css': 'source/sass/main.css',
                 }
             }
 
         },
-        copy:{
-            
+        copy: {
+            dist: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'source/',
+                        src: 'vendor/*',
+                        dest: 'deploy/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'source/',
+                        src: 'index.html',
+                        dest: 'deploy/'
+                    },
+                ]
+            }
         },
-        clean:{
-
-        },
-        cssmin:{
+        clean: {
             dist:{
-                files:{
-                    'deploy/css/main.css':'deploy/css/main.css'
+                src:["deploy"]
+            }
+        },
+        cssmin: {
+            dist: {
+                files: {
+                    'deploy/css/main.css': 'deploy/css/main.css'
                 }
             }
 
         },
-        uglify:{
-            options:{
-                mangle:true
+        uglify: {
+            options: {
+                mangle: true
             },
-            dist:{
+            dist: {
                 files: {
-                    'deploy/javascript/app.min.js':[
+                    'deploy/javascript/app.min.js': [
                         'source/javascript/incrementButton.js',
                         'source/javascript/date.js'
                     ]
@@ -43,7 +60,10 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    
+
+    grunt.registerTask('deploy', ['clean','autoprefixer','cssmin','uglify','copy']);
+
 }
 
